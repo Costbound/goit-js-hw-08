@@ -86,8 +86,12 @@ const items = images.map(({ preview, original, description }) => {
 })
 gallery.append(...items);
 
+
 gallery.addEventListener("click", (evt) => {
   if (evt.target.nodeName === "IMG") {
+    const instanceBtnClosing = (evt) => {
+      if (evt.keyCode === 27) instance.close();
+    }
     const instance = basicLightbox.create(
       `<img class="modal-img" src="${evt.target.dataset.source}" alt="${evt.target.getAttribute("alt")}" width="1112" heigth="640">`, {
       onShow: () => {
@@ -101,6 +105,3 @@ gallery.addEventListener("click", (evt) => {
   }
 });
 
-const instanceBtnClosing = (evt) => {
-    if (evt.keyCode === 27) instance.close();
-}
