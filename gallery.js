@@ -66,7 +66,7 @@ const images = [
 
 const gallery = document.querySelector(".gallery");
 
-images.forEach(({ preview, original, description }) => {
+const items = images.map(({ preview, original, description }) => {
     const item = document.createElement("li");
     item.classList.add("gallery-item");
     const link = document.createElement("a");
@@ -82,31 +82,25 @@ images.forEach(({ preview, original, description }) => {
     img.setAttribute("height", "200");
     link.append(img);
     item.append(link);
-    gallery.append(item);
+    return item
 })
-
+gallery.append(...items);
 
 gallery.addEventListener("click", (evt) => {
-    if (evt.target.nodeName === "IMG") {
-        instance.show(() => {
-            const img = document.querySelector(".modal-img");
-            img.setAttribute("src", evt.target.dataset.source);
-            img.setAttribute("alt", evt.target.getAttribute("alt"));
-        });
-    }
+  if (evt.target.nodeName === "IMG") {
+    const instance = basicLightbox.create(
+      `<img class="modal-img" src="${evt.target.dataset.source}" alt="${evt.target.getAttribute("alt")}" width="1112" heigth="640">`, {
+      onShow: () => {
+        window.addEventListener("keydown", instanceBtnClosing);
+      },
+      onClose: () => {
+        window.removeEventListener("keydown", instanceBtnClosing)
+      }
+    });
+    instance.show();
+  }
 });
 
 const instanceBtnClosing = (evt) => {
     if (evt.keyCode === 27) instance.close();
 }
-
-const instance = basicLightbox.create(`
-	<img class="modal-img width="1112" heigth="640"">
-`, {
-    onShow: () => {
-        window.addEventListener("keydown", instanceBtnClosing);
-    },
-    onClose: () => {
-        window.removeEventListener("keydown", instanceBtnClosing)
-    }
-})
